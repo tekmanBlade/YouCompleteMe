@@ -46,6 +46,7 @@ function! youcompleteme#Enable()
   call s:SetUpBackwardsCompatibility()
 
   py import sys
+  py import time
   py import vim
   exe 'python sys.path.insert( 0, "' . s:script_folder_path . '/../python" )'
   py from ycm import utils
@@ -463,8 +464,13 @@ function! s:UpdateDiagnosticNotifications()
     return
   endif
 
+  let start2 = pyeval('time.clock()')
+
   if pyeval( 'ycm_state.DiagnosticsForCurrentFileReady()' )
+    let start = pyeval( 'time.clock()')
+    echom printf( 'ycm diag %f', start - start2 )
     SyntasticCheck
+    echom printf( 'syn check %f', pyeval('time.clock()') - start )
   endif
 endfunction
 
